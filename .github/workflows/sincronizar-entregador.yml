@@ -1,0 +1,112 @@
+name: Sincronizar atualizacao do Entregador ao publicar release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: manifesto-entregador
+  cancel-in-progress: false
+
+jobs:
+  sincronizar:
+    if: startsWith(github.event.release.tag_name, 'entregador-v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obter manifesto atual
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+
+      - name: Conferir APK assinado e atualizar manifesto
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, re, subprocess, urllib.request
+          from pathlib import Path
+
+          event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
+          release = event["release"]
+          tag = release["tag_name"]
+          match = re.fullmatch(r"entregador-v(\d+)\.(\d+)\.(\d+)", tag)
+          if not match:
+              raise SystemExit("Tag de entregador invalida")
+          v = tuple(map(int, match.groups()))
+          version = ".".join(map(str, v))
+          manifest_path = Path("entregador/manifest.json")
+          previous = json.loads(manifest_path.read_text(encoding="utf-8"))
+          old = tuple(map(int, previous["versionName"].split(".")))
+          if v <= old:
+              print("Versao ja publicada ou inferior; manifesto mantido.")
+              raise SystemExit(0)
+
+          expected_name = f"VitrineLocalEntregador{v[0]}{v[1]}{v[2]:02d}.apk"
+          matches = [a for a in release.get("assets", []) if a["name"] == expected_name]
+          if len(matches) != 1:
+              raise SystemExit(f"Anexe o APK exato: {expected_name}")
+          asset = matches[0]
+          url = asset["browser_download_url"]
+          prefix = f"https://github.com/{os.environ['GITHUB_REPOSITORY']}/releases/download/{tag}/"
+          if url != prefix + expected_name:
+              raise SystemExit("URL de download nao corresponde ao repositorio/tag oficiais")
+
+          areas = []
+          for line in (release.get("body") or "").splitlines():
+              m = re.fullmatch(r"\s*[-*]\s+([^:]{2,70}):\s*(.{2,250})\s*", line)
+              if m:
+                  areas.append({"name": m.group(1).strip(), "description": m.group(2).strip()})
+          if not 1 <= len(areas) <= 10:
+              raise SystemExit("Descreva de 1 a 10 areas nas notas, como '- Entregas: Melhorias no fluxo de entrega.'")
+
+          req = urllib.request.Request(url, headers={"User-Agent": "VitrineLocal-Release-Publisher"})
+          with urllib.request.urlopen(req, timeout=90) as res:
+              apk = res.read(40_000_000)
+          if not 100_000 < len(apk) < 40_000_000 or apk[:2] != b"PK":
+              raise SystemExit("Arquivo APK nao parece valido")
+
+          local = Path("/tmp/entregador_release.apk")
+          local.write_bytes(apk)
+          sdk = Path(os.environ.get("ANDROID_HOME", "/opt/android-sdk")) / "build-tools"
+          aapts = list(sdk.glob("*/aapt"))
+          if not aapts:
+              raise SystemExit("Android aapt indisponivel no runner")
+          aapt = sorted(aapts, key=lambda p: tuple(map(int,re.findall(r"\d+",p.parent.name))))[-1]
+          badge = subprocess.check_output([str(aapt), "dump", "badging", str(local)], text=True)
+          m = re.search(r"package: name='([^']+)' versionCode='(\d+)' versionName='([^']+)'", badge)
+          if not m or m.group(1) != "com.vitrinelocal.ent" or m.group(3) != version:
+              raise SystemExit("APK nao corresponde ao pacote e a versao informados")
+          code = int(m.group(2))
+          if code <= previous["versionCode"]:
+              raise SystemExit("versionCode deve aumentar a cada release")
+
+          updated = {
+              "appId": "com.vitrinelocal.ent",
+              "versionCode": code,
+              "versionName": version,
+              "publishedAt": release["published_at"][:10],
+              "apkUrl": url,
+              "sha256": hashlib.sha256(apk).hexdigest(),
+              "areas": areas
+          }
+          manifest_path.write_text(json.dumps(updated, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          print("Manifesto preparado para:", tag, "SHA256:", updated["sha256"])
+          PY
+
+      - name: Publicar manifesto no canal oficial
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "vitrine-local-updates[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add entregador/manifest.json
+          if git diff --cached --quiet; then
+            echo "Nenhuma mudanca necessaria."
+          else
+            git commit -m "Atualizar canal Entregador para ${{ github.event.release.tag_name }}"
+            git push origin HEAD:main
+          fi
