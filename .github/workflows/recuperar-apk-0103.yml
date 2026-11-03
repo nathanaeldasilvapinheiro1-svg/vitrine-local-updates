@@ -1,0 +1,40 @@
+name: Corrigir arquivo APK da versao 0.1.03
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/recuperar-apk-0103.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  recuperar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar ZIP da Release existente
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/vitrine
+          gh release download entregador-v0.1.03 \
+            --repo "${GITHUB_REPOSITORY}" \
+            --pattern 'Vitrine_Entregador_0103_PC_novo.zip' \
+            --dir /tmp/vitrine
+      - name: Validar ZIP e extrair apenas o APK
+        run: |
+          set -euo pipefail
+          cd /tmp/vitrine
+          echo '36b56ddd5c9d6d4a60f6820ee2063fd6743a9d88bf13c5a09c7b48e0d974b090  Vitrine_Entregador_0103_PC_novo.zip' | sha256sum --check
+          unzip -p Vitrine_Entregador_0103_PC_novo.zip VitrineLocalEntregador0103.apk > VitrineLocalEntregador0103.apk
+          echo 'bb12a33e4a9c37d8ebfc30cb92ee017a0b51383477d05068501d8934e4657d4c  VitrineLocalEntregador0103.apk' | sha256sum --check
+      - name: Adicionar APK original ao Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release upload entregador-v0.1.03 \
+            /tmp/vitrine/VitrineLocalEntregador0103.apk \
+            --repo "${GITHUB_REPOSITORY}" --clobber
