@@ -37,7 +37,7 @@ jobs:
           if not match:
               raise SystemExit("Tag de entregador invalida")
           v = tuple(map(int, match.groups()))
-          version = ".".join(map(str, v))
+          version = f"{v[0]}.{v[1]}.{v[2]:02d}"
           manifest_path = Path("entregador/manifest.json")
           previous = json.loads(manifest_path.read_text(encoding="utf-8"))
           old = tuple(map(int, previous["versionName"].split(".")))
