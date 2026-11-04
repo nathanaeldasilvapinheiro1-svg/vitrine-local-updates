@@ -1,0 +1,47 @@
+name: Testar portal administrativo estático
+on:
+  pull_request:
+    paths:
+      - 'docs/**'
+      - '.github/workflows/testar-site-admin.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/testar-site-admin.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  static-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Conferir arquivos HTML e JavaScript
+        run: |
+          set -euo pipefail
+          node --check docs/admin/admin.js
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import re
+          root = Path('docs/admin')
+          html = (root/'index.html').read_text(encoding='utf-8')
+          js = (root/'admin.js').read_text(encoding='utf-8')
+          css = (root/'admin.css').read_text(encoding='utf-8')
+          assert all(len(x)>3500 for x in (html,js,css))
+          assert '<meta charset="utf-8">' in html
+          assert 'href="./admin.css"' in html
+          assert 'src="./admin.js"' in html
+          assert 'Content-Security-Policy' in html
+          assert 'sb_publishable_' in js
+          assert 'sb_secret_' not in js
+          assert 'service_role' not in js
+          assert 'am_i_driver_admin' in js
+          assert 'review_driver_application' in js
+          assert '/auth/v1/' in js
+          assert '?asset=' not in html
+          assert not re.search(r'(?i)(password|token|secret)\s*[=:]\s*["\x27]sk-', js)
+          assert 'Vitrine Local' in html
+          print('Portal HTML/CSS/JS válido, sem credenciais privilegiadas.')
+          PY
