@@ -3,6 +3,11 @@ name: Sincronizar atualizacao do Entregador ao publicar release
 on:
   release:
     types: [published]
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sincronizar-entregador.yml'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -13,7 +18,7 @@ concurrency:
 
 jobs:
   sincronizar:
-    if: startsWith(github.event.release.tag_name, 'entregador-v')
+    if: github.event_name != 'release' || startsWith(github.event.release.tag_name, 'entregador-v')
     runs-on: ubuntu-latest
     steps:
       - name: Obter manifesto atual
@@ -31,7 +36,18 @@ jobs:
           from pathlib import Path
 
           event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
-          release = event["release"]
+          if os.environ.get("GITHUB_EVENT_NAME") == "release":
+              release = event["release"]
+          else:
+              feed = f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/releases?per_page=50"
+              req = urllib.request.Request(feed, headers={"User-Agent": "VitrineLocal-Publisher", "Accept": "application/vnd.github+json"})
+              with urllib.request.urlopen(req, timeout=30) as res:
+                  releases = json.load(res)
+              candidates = [r for r in releases if r.get("published_at") and re.fullmatch(r"entregador-v\d+\.\d+\.\d+", r.get("tag_name", ""))]
+              if not candidates:
+                  print("Nenhuma Release do Entregador para sincronizar.")
+                  raise SystemExit(0)
+              release = max(candidates, key=lambda r: tuple(map(int, r["tag_name"].removeprefix("entregador-v").split("."))))
           tag = release["tag_name"]
           match = re.fullmatch(r"entregador-v(\d+)\.(\d+)\.(\d+)", tag)
           if not match:
@@ -66,7 +82,7 @@ jobs:
           req = urllib.request.Request(url, headers={"User-Agent": "VitrineLocal-Release-Publisher"})
           with urllib.request.urlopen(req, timeout=90) as res:
               apk = res.read(40_000_000)
-          if not 100_000 < len(apk) < 40_000_000 or apk[:2] != b"PK":
+          if not 20_000 < len(apk) < 40_000_000 or apk[:2] != b"PK":
               raise SystemExit("Arquivo APK nao parece valido")
 
           local = Path("/tmp/entregador_release.apk")
@@ -76,6 +92,13 @@ jobs:
           if not aapts:
               raise SystemExit("Android aapt indisponivel no runner")
           aapt = sorted(aapts, key=lambda p: tuple(map(int,re.findall(r"\d+",p.parent.name))))[-1]
+          apksigner = aapt.parent / "apksigner"
+          verification = subprocess.check_output([str(apksigner), "verify", "--verbose", "--print-certs", str(local)], text=True)
+          expected_cert = "6967b9df01d6c6504af56bf4aac8ca1cd03406e550bcaa5fadd24bdc44a8db1c"
+          certs = re.findall(r"certificate SHA-256 digest:\s*([0-9a-f]{64})", verification, re.I)
+          if (not certs or any(c.lower() != expected_cert for c in certs)
+              or "Verified using v2 scheme (APK Signature Scheme v2): true" not in verification):
+              raise SystemExit("Certificado ou assinatura digital do APK incorretos")
           badge = subprocess.check_output([str(aapt), "dump", "badging", str(local)], text=True)
           m = re.search(r"package: name='([^']+)' versionCode='(\d+)' versionName='([^']+)'", badge)
           if not m or m.group(1) != "com.vitrinelocal.ent" or m.group(3) != version:
