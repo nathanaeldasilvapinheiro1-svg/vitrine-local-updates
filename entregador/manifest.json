@@ -1,30 +1,26 @@
 {
   "appId": "com.vitrinelocal.ent",
-  "versionCode": 7,
-  "versionName": "0.1.06",
+  "versionCode": 8,
+  "versionName": "0.1.07",
   "publishedAt": "2026-11-04",
-  "apkUrl": "https://github.com/nathanaeldasilvapinheiro1-svg/vitrine-local-updates/releases/download/entregador-v0.1.06/VitrineLocalEntregador0106.apk",
-  "sha256": "0d0828f21f516454ce1dd63126b1add50e6b3f91fa6a6b4a5d4a9018e420e86e",
+  "apkUrl": "https://github.com/nathanaeldasilvapinheiro1-svg/vitrine-local-updates/releases/download/entregador-v0.1.07/VitrineLocalEntregador0107.apk",
+  "sha256": "ad7865a71724a2e6cfda633c6c28e9ac72f5894c7a08b8359d2064b67d490561",
   "areas": [
     {
       "name": "Início",
-      "description": "Cabeçalho mais compacto, status online refinado e entrega com etapa e informações melhor organizadas."
+      "description": "Status Online somente no cabeçalho; cartão substituído pela área de atendimento e situação das ofertas."
     },
     {
-      "name": "Mapa",
-      "description": "Mapa com melhor enquadramento, botão de localização reposicionado e créditos do OpenStreetMap integrados."
+      "name": "GPS e Mapa",
+      "description": "Localização opcional solicitada ao Android, destaque azul apenas após obter coordenadas e indicação da precisão."
     },
     {
-      "name": "Ganhos",
-      "description": "Resumo financeiro mais legível, filtros Hoje, Semana e Mês no Início e visual consistente na aba Ganhos."
+      "name": "Navegação",
+      "description": "Espaço de segurança na rolagem acima da barra inferior, preservando filtros e conteúdos."
     },
     {
-      "name": "Entregas",
-      "description": "Cartões, acompanhamento e botões com tipografia, cores e espaçamento aprimorados."
-    },
-    {
-      "name": "Carteira e navegação",
-      "description": "Carteira, barra inferior, ícones e cartões com acabamento mais limpo e profissional."
+      "name": "Privacidade",
+      "description": "GPS interrompido quando o aplicativo sai de primeiro plano e nenhum rastreamento enviado aos clientes."
     }
   ]
 }
