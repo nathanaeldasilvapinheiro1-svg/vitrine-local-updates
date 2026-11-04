@@ -1,26 +1,26 @@
 {
   "appId": "com.vitrinelocal.ent",
-  "versionCode": 8,
-  "versionName": "0.1.07",
+  "versionCode": 9,
+  "versionName": "0.1.08",
   "publishedAt": "2026-11-04",
-  "apkUrl": "https://github.com/nathanaeldasilvapinheiro1-svg/vitrine-local-updates/releases/download/entregador-v0.1.07/VitrineLocalEntregador0107.apk",
-  "sha256": "ad7865a71724a2e6cfda633c6c28e9ac72f5894c7a08b8359d2064b67d490561",
+  "apkUrl": "https://github.com/nathanaeldasilvapinheiro1-svg/vitrine-local-updates/releases/download/entregador-v0.1.08/VitrineLocalEntregador0108.apk",
+  "sha256": "3abeb834995e4eedfe20b7e2ce8e34f2794fb917ade9e8b9d1adaf5f7ed7c9a4",
   "areas": [
     {
-      "name": "Início",
-      "description": "Status Online somente no cabeçalho; cartão substituído pela área de atendimento e situação das ofertas."
+      "name": "Primeiro acesso",
+      "description": "Tela orientada para preparar o celular e solicitar localização apenas com autorização do entregador."
     },
     {
-      "name": "GPS e Mapa",
-      "description": "Localização opcional solicitada ao Android, destaque azul apenas após obter coordenadas e indicação da precisão."
+      "name": "GPS",
+      "description": "Ajuda para ativar localização nas configurações do Android quando o serviço estiver desligado."
     },
     {
-      "name": "Navegação",
-      "description": "Espaço de segurança na rolagem acima da barra inferior, preservando filtros e conteúdos."
+      "name": "Mapa",
+      "description": "Remove marcador verde duplicado e preserva somente o ponto azul da localização autorizada."
     },
     {
       "name": "Privacidade",
-      "description": "GPS interrompido quando o aplicativo sai de primeiro plano e nenhum rastreamento enviado aos clientes."
+      "description": "Localização opcional durante o uso, sem solicitação de rastreamento em segundo plano."
     }
   ]
 }
