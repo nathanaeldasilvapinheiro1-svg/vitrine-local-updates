@@ -1,30 +1,26 @@
 {
   "appId": "com.vitrinelocal.ent",
-  "versionCode": 10,
-  "versionName": "0.1.09",
+  "versionCode": 11,
+  "versionName": "0.1.10",
   "publishedAt": "2026-11-04",
-  "apkUrl": "https://github.com/nathanaeldasilvapinheiro1-svg/vitrine-local-updates/releases/download/entregador-v0.1.09/VitrineLocalEntregador0109.apk",
-  "sha256": "67bde55164dd2d9e7092f0ddc215eccc9c0cb0556499e9476ca755e008727875",
+  "apkUrl": "https://github.com/nathanaeldasilvapinheiro1-svg/vitrine-local-updates/releases/download/entregador-v0.1.10/VitrineLocalEntregador0110.apk",
+  "sha256": "e452e54deab5a11d169b674657010a3745dc25a890913849f9bc351500c597f0",
   "areas": [
     {
-      "name": "Cadastro e Login",
-      "description": "Autenticação real por e-mail e senha no Supabase, confirmação de e-mail e recuperação de acesso."
-    },
-    {
-      "name": "Aprovação obrigatória",
-      "description": "Novo entregador fica Em análise; status consultado no banco. Somente após aprovação pode acessar a área operacional, ainda demonstrativa."
-    },
-    {
       "name": "Documentos",
-      "description": "Envio de documentos a armazenamento privado, com acesso restrito ao titular e administradores autorizados."
+      "description": "Corrige botão de envio: quando não há arquivo selecionado, abre a seleção do celular."
     },
     {
-      "name": "Minha Conta",
-      "description": "Novo botão de perfil no cabeçalho, login, acompanhamento de cadastro e saída de conta."
+      "name": "Câmera e Galeria",
+      "description": "Exibe opções para fotografar, escolher imagem da galeria ou selecionar PDF/arquivo."
     },
     {
-      "name": "Rolagem",
-      "description": "Efeito elástico desativado na WebView, preservando navegação e mapa."
+      "name": "Privacidade",
+      "description": "Captura temporária no cache privado do aplicativo, sem acesso geral às fotos."
+    },
+    {
+      "name": "Confirmação",
+      "description": "Exibe o nome do arquivo escolhido antes de enviar ao armazenamento privado."
     }
   ]
 }
