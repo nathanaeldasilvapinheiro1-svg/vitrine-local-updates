@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#142129">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta http-equiv="Referrer-Policy" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; object-src 'none'; form-action 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src https://wnocdubgunyugdcjfpbj.supabase.co; upgrade-insecure-requests">
+<title>Vitrine Local · Administração de Entregadores</title>
+<link rel="stylesheet" href="./admin.css">
+<script src="./admin.js" defer></script>
+</head>
+<body>
+<header class="bar"><div class="brand"><span class="brand-mark">VL</span><span>Vitrine Local<small>Painel administrativo</small></span></div><span class="area">Rio Brilhante · MS</span></header>
+<main class="app">
+<div id="message" class="message" role="status" aria-live="polite" hidden></div>
+<section id="auth" class="card auth" hidden>
+  <div class="eyebrow">ACESSO RESTRITO</div>
+  <h1 id="auth-title">Entrar como administrador</h1>
+  <p id="auth-description">Utilize sua conta do Supabase. Uma conta nova precisa ser autorizada antes de acessar os cadastros.</p>
+  <form id="auth-form">
+    <label for="email">E-mail</label><input id="email" type="email" autocomplete="username" required placeholder="seu@email.com" maxlength="254">
+    <label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" required minlength="8" placeholder="Sua senha">
+    <button class="primary" id="auth-submit" type="submit">Entrar</button>
+  </form>
+  <div class="auth-actions">
+    <button class="link-btn" id="auth-toggle" type="button">Criar minha conta de acesso</button>
+    <button class="link-btn" id="forgot" type="button">Recuperar senha</button>
+  </div>
+  <p class="fineprint">As senhas são verificadas pelo Supabase Auth. O painel não concede acesso administrativo automaticamente.</p>
+</section>
+<section id="waiting" class="card" hidden>
+  <div class="eyebrow">ACESSO PENDENTE</div>
+  <h1>Conta criada, aguardando autorização</h1>
+  <p>Seu e-mail foi autenticado, mas ainda não há permissão administrativa. Envie somente o e-mail cadastrado ao responsável pelo projeto para conferir e liberar o seu acesso.</p>
+  <div id="waiting-email" class="info"></div>
+  <div class="buttons"><button class="secondary" id="waiting-retry" type="button">Verificar autorização</button><button class="ghost" id="waiting-exit" type="button">Sair</button></div>
+</section>
+<section id="dashboard" hidden>
+ <div class="topline"><div><div class="eyebrow">GESTÃO DE ENTREGADORES</div><h1>Cadastros e aprovações</h1><p>Somente você e administradores autorizados podem analisar solicitações.</p></div><div class="topactions"><span id="admin-email"></span><button class="secondary" id="refresh-list" type="button">Atualizar</button><button class="ghost" id="logout" type="button">Sair</button></div></div>
+ <div id="summary" class="summary"></div>
+ <section class="card"><div class="toolbar"><h2>Solicitações de cadastro</h2><label for="filter">Situação <select id="filter"><option value="all">Todos</option><option value="pending">Em análise</option><option value="correction_requested">Correção solicitada</option><option value="approved">Aprovado</option><option value="rejected">Rejeitado</option><option value="blocked">Bloqueado</option></select></label></div>
+ <div id="driver-list" class="driver-list"></div>
+ </section>
+ <section class="card" id="detail" hidden>
+  <div class="toolbar"><h2 id="detail-title">Revisar entregador</h2><button class="ghost" id="close-detail" type="button">Fechar</button></div>
+  <div id="driver-fields"></div><h3>Documentos privados</h3>
+  <div id="document-list"></div>
+  <p class="fineprint">Confira pessoalmente cada documento. A autorização só vale quando o Supabase registrar sua decisão.</p>
+  <form id="review-form">
+   <label for="decision">Decisão</label><select id="decision" required><option value="correction_requested">Solicitar correção</option><option value="approved">Aprovar cadastro</option><option value="rejected">Rejeitar cadastro</option></select>
+   <label for="reason">Justificativa (obrigatória para correção/rejeição)</label><textarea id="reason" rows="3" maxlength="2000" placeholder="Explique o que precisa ser corrigido"></textarea>
+   <label class="check"><input id="identity-check" type="checkbox"> Conferi a identidade com o documento original.</label>
+   <label class="check"><input id="document-check" type="checkbox"> Conferi a documentação necessária e os dados do veículo.</label>
+   <div class="buttons"><button class="primary" id="review-submit" type="submit">Registrar decisão no Supabase</button><button class="ghost" id="review-cancel" type="button">Cancelar</button></div>
+  </form>
+ </section>
+</section>
+<footer>Vitrine Local · Painel de gestão · Protegido por Supabase Auth + RLS</footer>
+</main>
+</body></html>
