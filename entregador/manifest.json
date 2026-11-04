@@ -1,26 +1,30 @@
 {
   "appId": "com.vitrinelocal.ent",
-  "versionCode": 9,
-  "versionName": "0.1.08",
+  "versionCode": 10,
+  "versionName": "0.1.09",
   "publishedAt": "2026-11-04",
-  "apkUrl": "https://github.com/nathanaeldasilvapinheiro1-svg/vitrine-local-updates/releases/download/entregador-v0.1.08/VitrineLocalEntregador0108.apk",
-  "sha256": "3abeb834995e4eedfe20b7e2ce8e34f2794fb917ade9e8b9d1adaf5f7ed7c9a4",
+  "apkUrl": "https://github.com/nathanaeldasilvapinheiro1-svg/vitrine-local-updates/releases/download/entregador-v0.1.09/VitrineLocalEntregador0109.apk",
+  "sha256": "67bde55164dd2d9e7092f0ddc215eccc9c0cb0556499e9476ca755e008727875",
   "areas": [
     {
-      "name": "Primeiro acesso",
-      "description": "Tela orientada para preparar o celular e solicitar localização apenas com autorização do entregador."
+      "name": "Cadastro e Login",
+      "description": "Autenticação real por e-mail e senha no Supabase, confirmação de e-mail e recuperação de acesso."
     },
     {
-      "name": "GPS",
-      "description": "Ajuda para ativar localização nas configurações do Android quando o serviço estiver desligado."
+      "name": "Aprovação obrigatória",
+      "description": "Novo entregador fica Em análise; status consultado no banco. Somente após aprovação pode acessar a área operacional, ainda demonstrativa."
     },
     {
-      "name": "Mapa",
-      "description": "Remove marcador verde duplicado e preserva somente o ponto azul da localização autorizada."
+      "name": "Documentos",
+      "description": "Envio de documentos a armazenamento privado, com acesso restrito ao titular e administradores autorizados."
     },
     {
-      "name": "Privacidade",
-      "description": "Localização opcional durante o uso, sem solicitação de rastreamento em segundo plano."
+      "name": "Minha Conta",
+      "description": "Novo botão de perfil no cabeçalho, login, acompanhamento de cadastro e saída de conta."
+    },
+    {
+      "name": "Rolagem",
+      "description": "Efeito elástico desativado na WebView, preservando navegação e mapa."
     }
   ]
 }
