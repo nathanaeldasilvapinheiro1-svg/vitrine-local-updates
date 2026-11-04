@@ -1,26 +1,22 @@
 {
   "appId": "com.vitrinelocal.ent",
-  "versionCode": 4,
-  "versionName": "0.1.03",
-  "publishedAt": "2026-11-03",
-  "apkUrl": "https://github.com/nathanaeldasilvapinheiro1-svg/vitrine-local-updates/releases/download/entregador-v0.1.03/VitrineLocalEntregador0103.apk",
-  "sha256": "bb12a33e4a9c37d8ebfc30cb92ee017a0b51383477d05068501d8934e4657d4c",
+  "versionCode": 5,
+  "versionName": "0.1.04",
+  "publishedAt": "2026-11-04",
+  "apkUrl": "https://github.com/nathanaeldasilvapinheiro1-svg/vitrine-local-updates/releases/download/entregador-v0.1.04/VitrineLocalEntregador0104.apk",
+  "sha256": "5e278c2d3340e9cbdcb4489bb48f188f9946f10c00aa6c5901a31a83eb62dd5b",
   "areas": [
     {
-      "name": "Atualizações",
-      "description": "Central de atualização com botão ATUALIZAR AGORA."
-    },
-    {
       "name": "Entregas",
-      "description": "Visual profissional e cartões compactos."
+      "description": "Fluxo profissional: ir à loja, confirmar retirada, ir ao cliente e concluir."
     },
     {
-      "name": "Mapa",
-      "description": "Mapa OpenStreetMap mantido."
+      "name": "GPS e Mapa",
+      "description": "OpenStreetMap com localização condicionada às permissões e proteção contra endereços incompletos."
     },
     {
-      "name": "Ganhos",
-      "description": "Faturamento exclusivo da aba Ganhos."
+      "name": "Atualizações",
+      "description": "Consulta silenciosa e botão ATUALIZAR AGORA somente para versões publicadas."
     }
   ]
 }
